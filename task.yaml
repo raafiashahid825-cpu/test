@@ -1,1 +1,31 @@
 
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: npm
+spec:
+  workspaces:
+    - name: shared-workspace
+  steps:
+    - name: install-dependencies
+      image: node:20
+      workingDir: $(workspaces.shared-workspace.path)
+      script: |
+        #!/bin/sh
+        npm install
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: jasmine
+spec:
+  workspaces:
+    - name: shared-workspace
+  steps:
+    - name: run-tests
+      image: node:20
+      workingDir: $(workspaces.shared-workspace.path)
+      script: |
+        #!/bin/sh
+        npx jasmine
+
